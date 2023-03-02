@@ -1,0 +1,179 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Results
+{% endblock %}
+
+{% block main %}
+
+<div class="ms-4 text-left">
+    {% if recipes %}
+      <h3>Recipes 
+          {% if list %}
+          containing
+            {% for ingredient in ingredients %}
+              {{ ingredient }}
+            {% endfor %} 
+          {% endif %}
+          are: {{ count }}
+
+          <form action="/result" method="get" class="d-inline mx-2 ">
+            <input type="text" required autocomplete="off" name="ingredients" placeholder="Another Ingredients" class="d-inline">
+            <button type="submit" class="btn btn-sm rounded-pill d-inline-flex mx-2">Search</button>
+          </form>
+
+      </h3>
+    {% endif %}
+
+    <div class="container-fluid">
+      {% if not recipes %}
+      <!-- Handle error -->
+      <div class="text-center">
+          <div class="fs-1 fw-7 text-center mb-3">No result!</div>
+          <div class="fs-5">There are no recipes that match your requirements.</div>
+          <div class="fs-5 mb-5">Please make sure there's no typo in your query.</div>
+          <a href="/" class="btn btn-lg  align-text-mid my-2" id="bkmrklnk">Try Again?</a>
+      </div>
+    
+    {% else %}
+ 
+    <div class="d-flex align-content-around flex-wrap justify-content-evenly">
+    {% for list in list %}
+    <!-- Card -->
+        <div type="button" class="position-relative border-2 card mb-4" style="width: 18rem;" data-bs-toggle="modal" data-bs-target="#list{{ loop.index }}">
+          <!-- Card Image -->
+            <img class="card-img img-fluid" src="{{ list['image'] }}" alt="{{ list['label'] }}">
+            <div class="card-body" style="text-align: left!important;">
+              <!-- Card Recipe Label -->
+            <div class="h4 lh-sm card-text text-capitalize mb-4">{{ list['label'] }}</div>
+            <!-- Dish Type -->
+            {% if list['dishType'] %}
+              <div class="h5 lh-sm card-text text-capitalize mb-4">{{ list['dishType']|replace("'","") }}</div>
+            {% else %}
+              <div class="h5 lh-sm card-text text-capitalize mb-4">None</div>
+            {% endif %}  
+            <!-- Diet Labels -->
+            {% for dietlabel in list['dietLabels'] %}
+              <p class="card-text"> {{ dietlabel }} </p>
+            {% endfor %}    
+            </div>
+        </div>
+    
+<!-- Modal -->
+<div class="modal fade" id="list{{ loop.index }}" aria-labelledby="list" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+          <!-- Modal Header -->
+            <div class="modal-header">            
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <!-- Modal Body -->
+        <div class="modal-body p-2">
+            <div class="container-fluid">
+              <div class="row">
+                <div class="col-auto">
+                  <!-- Modal Image -->
+                  <img class="img-fluid" src="{{ list['image'] }}" alt="{{ list['label'] }}">
+                  <!-- Recipe Total Time if exists -->
+                  <div class="row">
+                    <div class="col-md-6 text-start">
+                      {% if list['totalTime']|float > 0.0  %}
+                          <h6>&#x23f1;{{ list['totalTime']|int }} min.</h6>
+                      {% else %}
+                          <h6>&#x23f1; <span style="font-style: italic;">N/A</span></h6>
+                      {% endif %}  
+                    </div> 
+                    <!-- Recipe Calories -->
+                    <div class="col-lg-6 text-end">
+                      <h6 style="font-size: large;">{{ list['calories']|int }}<span style="font-size: large;">&#13193;</span></h6>
+                    </div> 
+                  </div>
+                  <!-- Recipe link buttn -->
+                  <div class="row-6 text-center">
+                    <a href="{{ list['url'] }}"  target="_blank"><button type="button"   class=" btn btn-lg btn-secondary mt-5">Full Recipe<span>&#128279;</span></button></a>
+                 </div> 
+            </div>
+                <!-- Recipe Name and Source -->
+                <div class="col-md-6">
+                  <h5>{{ list['label']  }} | 
+                    {% for meal in list['mealType']|sort %}
+                      {{ meal }}
+                    {% endfor %}  
+                    </h5>
+                <!-- Recipe Source -->
+                <div class="col-px-4">
+                  <h5>By <small>{{ list['source'] }}</small></h5>
+                </div>
+                <!-- Recipe Ingredients -->
+                <div class="col-px-4">
+                  <span class="text-muted" style="font-size: large;">Ingredients:</span>
+                </div>
+                <div class="col-px-4">
+                  <ul class="list-group">
+                  {% for ingredient in list['ingredients']|sort %}
+                    <li class="list-group-item fw-bold lh-sm">{{ ingredient }}</li>
+                  {% endfor %}
+                  </ul>
+                </div>
+                <!-- Modal Recipe Health Labels -->
+                <div class="col-px-4">
+                   <span class="text-muted " style="font-size: large;">Health Labels:</span>
+                    <h6 class="ps-1 lh-1 text-uppercase d-flex flex-wrap">
+                      {% for healthlabel in list['healthLabels']|sort %}
+                        {{ healthlabel }}
+                      {% endfor %}  
+                    </h6>
+                </div>
+                </div>
+              </div>
+
+
+            </div>
+          </div>
+            <!-- Modal footer | Form to post  the info of the recipe that user wants to bookmark-->       
+            <div class="modal-footer">
+              <form action="/add" method="post" class="col text-center">
+                
+                    <div>
+                      <input type="hidden" name="link" value="{{ list['link'] }}">
+                      <input type="hidden" name="source" value="{{ list['source'] }}">
+                      <input type="hidden" name="label" value="{{ list['label'] }}">
+                      <input type="hidden" name="ingredients" value="{{ list['ingredients'] }}">
+                      <input type="hidden" name="url" value="{{ list['url'] }}">
+                      <input type="hidden" name="image" value="{{ list['image'] }}">
+                      <input type="hidden" name="calories" value="{{ list['calories'] }}">
+                      <input type="hidden" name="cuisineType" value="{{ list['cuisineType'] }}">
+                      <input type="hidden" name="dishType" value="{{ list['dishType'] }}">
+                      <input type="hidden" name="dietLabels" value="{{ list['dietLabels'] }}">
+                      <input type="hidden" name="totalTime" value="{{ list['totalTime'] }}">
+                      <input type="hidden" name="healthLabels" value="{{ list['healthLabels'] }}">
+                      <input type="hidden" name="mealType" value="{{ list['mealType'] }}">
+                    </div>
+                    <div>
+
+                      <input type="submit" name="bookmark" id="bookmark" value="Bookmark" class="px-5 btn btn-primary"
+                      {% for row in saved_recipes %} 
+                        {% if list['link'] not in row %}
+                          onClick="this.form.submit(); this.disabled=true; this.value='Bookmarked';" 
+                        {% else %}
+                          disabled="disabled"
+                        {%endif%} 
+                      {% endfor %}> 
+                      
+                    </div>
+                
+              </form>
+            </div>
+       </div>
+    </div>
+   </div>
+  
+  
+    {% endfor %}
+  </div>
+  {% endif %}
+</div> 
+  
+    {% block script %}
+    {% endblock %}     
+{% endblock %}

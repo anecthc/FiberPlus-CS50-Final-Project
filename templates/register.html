@@ -1,0 +1,27 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Register
+{% endblock %}
+
+{% block main %}
+<div class="container text-center">
+    <div class="row">
+        <form action="/register" method="post" id="register_form">
+            <div class="mb-3">
+                <input autocomplete="off" autofocus class="form-control mx-auto w-auto" id="username" name="username" placeholder="Username" type="text">
+            </div>
+            <div class="mb-3">
+                <input class="form-control mx-auto w-auto" id="password" name="password" placeholder="Password" type="password">
+            </div>
+            <div class="mb-3">
+                <input class="form-control mx-auto w-auto" id="password" name="confirmation" placeholder="Confirm Password" type="password">
+            </div>
+            <button class="btn px-5" type="submit">Register</button>           
+        </form>
+    </div>
+    <div class="row mt-4">
+        <h4>With your registration you can search for recipes and save them in your bookmarks.</h4>
+    </div>
+</div>    
+{% endblock %}

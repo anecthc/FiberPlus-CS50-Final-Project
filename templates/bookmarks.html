@@ -1,0 +1,145 @@
+{% extends "layout.html" %}
+
+{% block title %}
+Bookmarks
+{% endblock %}
+
+{% block main %}
+{% if saved_recipes %}
+    <div class="container text-left ms-2 mb-4">
+        <h2>Bookmarked recipes:</h2>
+        <a href="/" class="btn btn-lg  align-text-mid my-1" id="bkmrklnk">New search</a>   
+    </div> 
+{% endif %}
+<div class="d-flex align-content-around flex-wrap justify-content-evenly">
+    <!-- Check if not bookmarks yet -->
+    {% if not saved_recipes %}
+        <div class="text-center">
+            <div class="fs-1 fw-7 text-center mb-3">Nothing here!</div>
+            <div class="fs-5">You haven't bookmarked any recipe yet!</div>
+            <a href="/" class="btn btn-lg  align-text-mid my-2">Start here!</a>
+        </div>
+    {% else %}   
+    
+    {% for recipe in saved_recipes %}
+    <!-- Card -->
+    <div type="button" class="position-relative border-2 card mb-4"
+        style="width: 18rem;" data-bs-toggle="modal" data-bs-target="#recipe{{ loop.index }}">
+        <!-- Card Image -->
+        <img class="card-img img-fluid" src="{{ recipe['image'] }}" alt="{{ recipe['label'] }}">
+        <div class="card-body" style="text-align: left!important;">
+            <!-- Card Recipe Label -->
+            <div class="h4 lh-sm card-text text-capitalize mb-4">{{ recipe['label'] }}</div>
+            <!-- Dish Type -->
+            <div class="h5 lh-sm card-text text-capitalize mb-4">{{ recipe['dish_type']|replace("'","") }}</div>
+            <!-- Diet Labels -->
+            <p class="card-text"> 
+                {{ recipe['diet_labels']|replace("'","")|replace("[","")|replace("]","") }} 
+            </p>
+        </div>
+    </div>
+    <!-- Modal -->
+    <div class="modal fade" id="recipe{{ loop.index }}" aria-labelledby="list"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <!-- Modal Header -->
+                <div class="modal-header">
+                    <button type="button" class="btn-close"
+                        data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <!-- Modal Body -->
+                <div class="modal-body p-2">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-auto">
+                                <!-- Modal Image -->
+                                <img class="img-fluid" src="{{ recipe['image'] }}" alt="{{ recipe['label'] }}">
+                                <!-- Recipe Total Time if exists -->
+                                <div class="row">
+                                    <div class="col-md-6 text-start">
+                                        {% if recipe['total_time']|float > 0.0 %}
+                                        <h6>&#x23f1;{{ recipe['total_time']|int }} min.</h6>
+                                        {% else %}
+                                        <h6>&#x23f1; <span style="font-style: italic;">N/A</span></h6>
+                                        {% endif %}
+                                    </div>
+                                    <!-- Recipe Calories -->
+                                    <div class="col-lg-6 text-end">
+                                        <h6 style="font-size: large;">{{
+                                            recipe['calories']|int }}<span
+                                                style="font-size: large;">&#13193;</span></h6>
+                                    </div>
+                                </div>
+                                <!-- Recipe link buttn -->
+                                <div class="row-6 text-center">
+                                    <a href="{{ recipe['url'] }}"
+                                        target="_blank"><button type="button"
+                                            class=" btn btn-lg btn-secondary
+                                            mt-5">Full Recipe<span>&#128279;</span></button></a>
+                                </div>
+                            </div>
+                            <!-- Recipe Name and Source -->
+                            <div class="col-md-6">
+                                <h5>{{ recipe['label'] }} |
+                                     {{ recipe['meal_type']|replace("[","")|replace("]","")|replace("'","") }}
+
+                                </h5>
+
+                                <div class="col-px-4">
+                                    <h5>By <small>{{ recipe['source'] }}</small></h5>
+                                </div>
+                                <div class="col-px-4">
+                                    <span class="text-muted" style="font-size:
+                                        large;">Ingredients:</span>
+                                </div>
+                                <div class="col-px-4">
+                                    {% set list = recipe['ingredients'].split("', '") %}
+                                    <ul class="list-group">
+                                        {% for ingredient in list %}
+                                        <li class="list-group-item fw-bold
+                                            lh-sm">
+                                            {{ ingredient|replace("[","")|replace("]","")|replace("'","") }}
+                                        </li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                                <!-- Modal Recipe Health Labels -->
+                                <div class="col-px-4">
+                                    {% set list = recipe['health_labels'].split("', '") %}
+                                    <span class="text-muted " style="font-size:
+                                        large;">Health Labels:</span>
+                                    <h6 class="ps-1 lh-1 text-uppercase d-flex
+                                        flex-wrap">
+                                        {% for healthlabel in list|sort %}
+
+                                        {{ healthlabel|replace("[","")|replace("]","")|replace("'","") }}
+
+                                        {% endfor %}
+                                    </h6>
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+                <!-- Modal Footer / Remove Bookmark Button -->
+                <div class="modal-footer">
+                    <div class="col text-center">
+                        <form action="/remove" method="POST">
+                            <input name="link" type="hidden" value="{{recipe['link'] }}">
+                            <input type="submit" name="remove" id="remove" value="Remove" class="px-5 btn btn-primary" onClick="this.form.submit(); this.parent().parent().parent().remove();">
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% endfor %}
+    {% endif %}
+</div>
+
+
+{% endblock %}

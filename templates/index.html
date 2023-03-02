@@ -1,0 +1,27 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Home
+{% endblock %}
+
+
+{% block main %}
+<div class="container-fluid text-center">
+    <h2>Hello, {{ username }}</h2>
+    <h3>Please fill your desired ingredients to find recipes.</h3>
+</div>
+
+<div class="form p-5 container-fluid">
+    <form action="/result" method="get" autocomplete="off">
+    
+        <div class="mb-5" >
+            <input autocomplete="off" autofocus class="form-control mx-auto w-auto" id="" name="ingredients" placeholder="Ingredients" type="text" required>
+        </div>
+        <div class="text-center">
+            <button class="btn" type="submit">Search</button>
+        </div>
+    </form>
+</div>
+
+
+{% endblock %}

@@ -1,0 +1,33 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Profile
+{% endblock %}
+
+{% block main %}
+<div class="container text-center">
+    <div class="form p-5">
+        <form action="/profile" method="post" autocomplete="off">
+        
+            <div class="mb-3" >
+                <input autocomplete="off" autofocus class="form-control mx-auto w-auto" id="" name="current_password" placeholder="Current Password" type="password">
+            </div>
+            <div class="mb-3" >
+                <input autocomplete="off" autofocus class="form-control mx-auto w-auto" id="" name="new_password" placeholder="New Password" type="password">
+            </div>
+            <div class="mb-3" >    
+                <input autocomplete="off" autofocus class="form-control mx-auto w-auto" id="" name="new_confirm_password" placeholder="Confirmation Password" type="password">
+
+            </div>
+            <div class="d-grid gap-2 col-2 mx-auto">
+                <button class="btn" type="submit">Submit</button>
+            </div>
+        
+        </form>
+    </div>
+    <div class="row flex">
+        <h4>Change your current password.</h4>
+    </div>
+</div>
+
+{% endblock %}
