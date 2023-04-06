@@ -11,9 +11,7 @@
       <h3>Recipes 
           {% if list %}
           containing
-            {% for ingredient in ingredients %}
-              {{ ingredient }}
-            {% endfor %} 
+          {{ ingredients|join(', ') }}
           {% endif %}
           are: {{ count }}
 

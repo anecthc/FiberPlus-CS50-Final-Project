@@ -39,9 +39,13 @@ def after_request(response):
 
 
 def recipe_search(param):
-      
-    result = requests.get(
-     'https://api.edamam.com/api/recipes/v2?type=public&q={}&app_id={}&app_key={}'.format(param, app_id, app_key))
+    url = f'https://api.edamam.com/api/recipes/v2?type=public&q={param}&app_id={app_id}&app_key={app_key}'
+    result = requests.get(url)
+
+    if result.status_code != 200:
+        print(f'Error: {result.status_code} - {result.reason}')
+        return None
+
     data = result.json()
     return data['hits']
     
@@ -67,7 +71,7 @@ def index():
 def results():
     
     # Get input values from user
-    ingredients = request.form.getlist("ingredients")
+    ingredients = request.args.getlist("ingredients")
     
     # Search for recipes from User's ingredients liking
     recipes = recipe_search(ingredients)
@@ -123,7 +127,7 @@ def results():
                 [session["user_id"]])
     saved_recipes = cur.fetchall()
     con.close()
-    return render_template("result.html", recipes = recipes, list=list, ingredients=ingredients, count=count, saved_recipes=saved_recipes)
+    return render_template("result.html", recipes=recipes, list=list, ingredients=ingredients, count=count, saved_recipes=saved_recipes)
 
 
 @app.route("/register", methods=["GET", "POST"])
@@ -150,15 +154,15 @@ def register():
 
         # Insert info in our table users
         try:
-            with sqlite3.connect("Users.db") as con:
+                con = sqlite3.connect("Users.db")
                 cur = con.cursor()
-                cur.execute(
-                    "INSERT INTO users (username, hash) VALUES (?,?) ", (username, hash))
+                query = "INSERT INTO users (username, hash) VALUES ('{}', '{}')".format(username, hash)
+                cur.execute(query)
                 con.commit()
                 con.close()
 
                 return redirect("/")
-        except:
+        except sqlite3.IntegrityError:
             return apology("This Username already exists")
     else:
         return render_template("register.html")
@@ -177,11 +181,11 @@ def login():
 
         # Ensure username was submitted
         if not username:
-            return apology("must provide username", 403)
+            return apology("Must provide username", 403)
 
         # Ensure password was submitted
         elif not password:
-            return apology("must provide password", 403)
+            return apology("Must provide password", 403)
 
         # Query database for username
 
@@ -212,7 +216,7 @@ def login():
     # User reached route via GET (as by clicking a link or via redirect)
     else:
         return render_template("login.html")
-
+    
 
 @app.route("/logout")
 def logout():
@@ -343,3 +347,9 @@ def profile():
     # User reached route via GET (as by clicking a link or via redirect)
     else:
         return render_template("profile.html")
+
+
+@app. errorhandler(404) 
+def page_not_found(e): 
+    return apology("Invalid route")
+
