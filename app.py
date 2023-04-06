@@ -56,7 +56,8 @@ def recipe_search(param):
 def index():
     """ Homepage """
     user_id = session["user_id"]
-    con = sqlite3.connect("Users.db")
+    # con = sqlite3.connect("Users.db")
+    con = sqlite3.connect("postgres://rifvguuhvjxjgk:3e199ba37b38ccdd805d1c82be3e4cc664b36aa19bfba7cf8734e5b88def6b92@ec2-3-208-74-199.compute-1.amazonaws.com:5432/d83emqg7rgq4c")
     con.row_factory = sqlite3.Row
     cur = con.cursor()
     cur.execute("SELECT * FROM users WHERE user_id = ?", [user_id])
