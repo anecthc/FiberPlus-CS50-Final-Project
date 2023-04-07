@@ -1,4 +1,4 @@
-import sqlite3
+import psycopg2
 import requests
 import configparser
 from flask import Flask, redirect, render_template, request, session, flash
@@ -57,8 +57,8 @@ def index():
     """ Homepage """
     user_id = session["user_id"]
     # con = sqlite3.connect("Users.db")
-    con = sqlite3.connect("postgres://rifvguuhvjxjgk:3e199ba37b38ccdd805d1c82be3e4cc664b36aa19bfba7cf8734e5b88def6b92@ec2-3-208-74-199.compute-1.amazonaws.com:5432/d83emqg7rgq4c")
-    con.row_factory = sqlite3.Row
+    con = psycopg2.connect("postgres://rifvguuhvjxjgk:3e199ba37b38ccdd805d1c82be3e4cc664b36aa19bfba7cf8734e5b88def6b92@ec2-3-208-74-199.compute-1.amazonaws.com:5432/d83emqg7rgq4c")
+    con.row_factory = psycopg2.Row
     cur = con.cursor()
     cur.execute("SELECT * FROM users WHERE user_id = ?", [user_id])
     rows = cur.fetchall()[0]
@@ -121,8 +121,8 @@ def results():
         })
         count = count + 1
 
-    con = sqlite3.connect("Users.db")
-    con.row_factory = sqlite3.Row
+    con = psycopg2.connect("postgres://rifvguuhvjxjgk:3e199ba37b38ccdd805d1c82be3e4cc664b36aa19bfba7cf8734e5b88def6b92@ec2-3-208-74-199.compute-1.amazonaws.com:5432/d83emqg7rgq4c")
+    con.row_factory = psycopg2.Row
     cur = con.cursor()
     cur.execute("SELECT link FROM bookmarks WHERE user_id = ?",
                 [session["user_id"]])
@@ -155,7 +155,7 @@ def register():
 
         # Insert info in our table users
         try:
-                con = sqlite3.connect("Users.db")
+                con = psycopg2.connect("postgres://rifvguuhvjxjgk:3e199ba37b38ccdd805d1c82be3e4cc664b36aa19bfba7cf8734e5b88def6b92@ec2-3-208-74-199.compute-1.amazonaws.com:5432/d83emqg7rgq4c")
                 cur = con.cursor()
                 query = "INSERT INTO users (username, hash) VALUES ('{}', '{}')".format(username, hash)
                 cur.execute(query)
@@ -163,7 +163,7 @@ def register():
                 con.close()
 
                 return redirect("/")
-        except sqlite3.IntegrityError:
+        except psycopg2.IntegrityError:
             return apology("This Username already exists")
     else:
         return render_template("register.html")
@@ -190,8 +190,8 @@ def login():
 
         # Query database for username
 
-        con = sqlite3.connect("Users.db")
-        con.row_factory = sqlite3.Row
+        con = psycopg2.connect("postgres://rifvguuhvjxjgk:3e199ba37b38ccdd805d1c82be3e4cc664b36aa19bfba7cf8734e5b88def6b92@ec2-3-208-74-199.compute-1.amazonaws.com:5432/d83emqg7rgq4c")
+        con.row_factory = psycopg2.Row
         cur = con.cursor()
         cur.execute("SELECT * FROM users WHERE username = ?", [username])
         # Error handle if user doesn't exist
@@ -251,7 +251,7 @@ def add():
     ingredients = request.form.get("ingredients").strip("[]")
 
     # Connect to Users database
-    con = sqlite3.connect("Users.db")
+    con = psycopg2.connect("postgres://rifvguuhvjxjgk:3e199ba37b38ccdd805d1c82be3e4cc664b36aa19bfba7cf8734e5b88def6b92@ec2-3-208-74-199.compute-1.amazonaws.com:5432/d83emqg7rgq4c")
     cur = con.cursor()
     # Insert into bookmarks in Users.db the data we got from the form for each recipe the user wants to bookmark
     cur.execute("INSERT INTO bookmarks (user_id, link, label, image, source, url, calories, meal_type, total_time, dish_type, diet_labels, health_labels, cuisine_type, ingredients) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
@@ -267,8 +267,8 @@ def add():
 @login_required
 def bookmark():
     
-    con = sqlite3.connect("Users.db")
-    con.row_factory = sqlite3.Row
+    con = psycopg2.connect("postgres://rifvguuhvjxjgk:3e199ba37b38ccdd805d1c82be3e4cc664b36aa19bfba7cf8734e5b88def6b92@ec2-3-208-74-199.compute-1.amazonaws.com:5432/d83emqg7rgq4c")
+    con.row_factory = psycopg2.Row
     cur = con.cursor()
     cur.execute("SELECT * FROM bookmarks WHERE user_id = ?",
                 [session["user_id"]])
@@ -283,7 +283,7 @@ def bookmark():
 def remove():
     link = request.form.get("link")
 
-    con = sqlite3.connect("Users.db")
+    con = psycopg2.connect("postgres://rifvguuhvjxjgk:3e199ba37b38ccdd805d1c82be3e4cc664b36aa19bfba7cf8734e5b88def6b92@ec2-3-208-74-199.compute-1.amazonaws.com:5432/d83emqg7rgq4c")
     cur = con.cursor()
     cur.execute("DELETE FROM bookmarks WHERE link = ?", (link,))
     con.commit()
@@ -298,8 +298,8 @@ def profile():
     if request.method == "POST":
 
         # Query the database for the user id
-        con = sqlite3.connect("Users.db")
-        con.row_factory = sqlite3.Row
+        con = psycopg2.connect("postgres://rifvguuhvjxjgk:3e199ba37b38ccdd805d1c82be3e4cc664b36aa19bfba7cf8734e5b88def6b92@ec2-3-208-74-199.compute-1.amazonaws.com:5432/d83emqg7rgq4c")
+        con.row_factory = psycopg2.Row
         cur = con.cursor()
         cur.execute("SELECT * FROM users WHERE user_id = ?",
                     [session["user_id"]])
