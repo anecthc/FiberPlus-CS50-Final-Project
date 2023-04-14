@@ -192,7 +192,7 @@ def login():
         cur.execute("SELECT * FROM users WHERE username = %s", (username,))
         # Error handle if user doesn't exist
         try:
-            rows = cur.fetchall()[0]
+            rows = cur.fetchall()
         except:
             return apology("This Username doesn't exist")
 
