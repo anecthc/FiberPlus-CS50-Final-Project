@@ -122,7 +122,7 @@ def results():
         count = count + 1
 
     con = psycopg2.connect("postgres://rifvguuhvjxjgk:3e199ba37b38ccdd805d1c82be3e4cc664b36aa19bfba7cf8734e5b88def6b92@ec2-3-208-74-199.compute-1.amazonaws.com:5432/d83emqg7rgq4c")
-    cur = con.cursor(cursor_factory=psycopg2.extras.DictCursor)
+    cur = con.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
     cur.execute("SELECT link FROM bookmarks WHERE user_id = %s", [session["user_id"]])
     saved_recipes = cur.fetchall()
     con.close()
