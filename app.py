@@ -13,6 +13,7 @@ app = Flask(__name__)
 
 # Ensure templates are auto-reloaded
 app.config["TEMPLATES_AUTO_RELOAD"] = True
+app.config["DEBUG"] = True
 
 
 # Configure session to use filesystem (instead of signed cookies)
@@ -192,7 +193,7 @@ def login():
         cur.execute("SELECT * FROM users WHERE username = %s", (username,))
         # Error handle if user doesn't exist
         try:
-            rows = cur.fetchall()
+            rows = cur.fetchall()[0]
         except:
             return apology("This Username doesn't exist")
 
