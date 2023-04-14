@@ -189,7 +189,7 @@ def login():
 
         con = psycopg2.connect("postgres://nwobalvgtjvblb:6500a8e0f7c23222d2c5c783298a857170f1531b07c6e71536eb7aeeba726ee0@ec2-54-211-177-159.compute-1.amazonaws.com:5432/d1v5gbplsiu69j")
         cur = con.cursor(cursor_factory=psycopg2.extras.DictCursor)
-        cur.execute("SELECT * FROM users WHERE username = %s", (username))
+        cur.execute("SELECT * FROM users WHERE username = %s", (username,))
         # Error handle if user doesn't exist
         try:
             rows = cur.fetchall()[0]
@@ -343,3 +343,5 @@ def profile():
 def page_not_found(e): 
     return apology("Invalid route")
 
+if __name__ == "__main__":
+    app.run(debug=True)
