@@ -58,7 +58,7 @@ Bookmarks
                                 <!-- Recipe Total Time if exists -->
                                 <div class="row">
                                     <div class="col-md-6 text-start">
-                                        {% if recipe['total_time']|float > 0.0 %}
+                                        {% if recipe.get('total_time', 0.0)|float > 0.0 %}
                                         <h6>&#x23f1;{{ recipe['total_time']|int }} min.</h6>
                                         {% else %}
                                         <h6>&#x23f1; <span style="font-style: italic;">N/A</span></h6>
