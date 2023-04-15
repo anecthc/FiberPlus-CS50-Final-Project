@@ -234,7 +234,7 @@ def add():
     image = request.form.get("image")
     source = request.form.get("source")
     url = request.form.get("url")
-    calories = int(float(request.form.get("calories")))
+    calories = request.form.get("calories")
     mealType = request.form.get("mealType")
     totalTime = request.form.get("totalTime")
 
@@ -246,7 +246,7 @@ def add():
 
     # Connect to Users database
     con = psycopg2.connect("postgres://nwobalvgtjvblb:6500a8e0f7c23222d2c5c783298a857170f1531b07c6e71536eb7aeeba726ee0@ec2-54-211-177-159.compute-1.amazonaws.com:5432/d1v5gbplsiu69j")
-    cur = con.cursor(cursor_factory=psycopg2.extras.DictCursor)
+    cur = con.cursor()
     # Insert into bookmarks in Users.db the data we got from the form for each recipe the user wants to bookmark
     cur.execute("INSERT INTO bookmarks (user_id, link, label, image, source, url, calories, meal_type, total_time, dish_type, diet_labels, health_labels, cuisine_type, ingredients) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)",
             (session["user_id"], link, label, image, source, url, calories, mealType, totalTime, dishType, dietLabels, healthLabels, cuisineType, ingredients))
