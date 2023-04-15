@@ -234,7 +234,7 @@ def add():
     image = request.form.get("image")
     source = request.form.get("source")
     url = request.form.get("url")
-    calories = float(request.form.get("calories"))
+    calories = request.form.get("calories")
     mealType = request.form.get("mealType")
     totalTime = request.form.get("totalTime")
 
