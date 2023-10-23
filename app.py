@@ -149,8 +149,17 @@ def register():
         # Hash password
         hash = generate_password_hash(password)
 
-        # Insert info in our table users
-        try:
+       # Check if the username already exists
+        con = psycopg2.connect("your_database_connection_info")
+        cur = con.cursor(cursor_factory=psycopg2.extras.DictCursor)
+        cur.execute("SELECT * FROM users WHERE username = %s", (username,))
+        existing_user = cur.fetchone()
+        con.close()
+
+        if existing_user:
+            return apology("This Username already exists")
+        else:
+            # Insert info in our table users
             con = psycopg2.connect("postgres://qqsgjbkfwqpwny:59ceaff4ecac084fe6cb6dbbe8c544a626000f94e9b79778279abac06ba31e0e@ec2-52-5-167-89.compute-1.amazonaws.com:5432/d1uejtb7i1agt2")
             cur = con.cursor(cursor_factory=psycopg2.extras.DictCursor)
             query = "INSERT INTO users (username, hash) VALUES (%s, %s)"
@@ -158,8 +167,6 @@ def register():
             con.commit()
             con.close()
             return redirect("/")
-        except psycopg2.Error:
-            return apology("This Username already exists")
     else:
         return render_template("register.html")
 
