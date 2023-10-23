@@ -226,6 +226,13 @@ def add():
     source = request.form.get("source")
     url = request.form.get("url")
     calories = request.form.get("calories")
+    try:
+        calories = int(float(calories))
+    except (ValueError, TypeError):
+        # Handle the case where calories cannot be converted to an integer
+        # You can set a default value or handle the error as needed
+        calories = 0  # Default value, change it accordingly
+
     mealType = request.form.get("mealType")
     totalTime = request.form.get("totalTime")
 
