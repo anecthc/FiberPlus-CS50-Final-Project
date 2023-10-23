@@ -57,7 +57,7 @@ def index():
     """ Homepage """
     user_id = session["user_id"]
     # con = sqlite3.connect("Users.db")
-    con = psycopg2.connect("postgres://nwobalvgtjvblb:6500a8e0f7c23222d2c5c783298a857170f1531b07c6e71536eb7aeeba726ee0@ec2-54-211-177-159.compute-1.amazonaws.com:5432/d1v5gbplsiu69j")
+    con = psycopg2.connect("postgres://qqsgjbkfwqpwny:59ceaff4ecac084fe6cb6dbbe8c544a626000f94e9b79778279abac06ba31e0e@ec2-52-5-167-89.compute-1.amazonaws.com:5432/d1uejtb7i1agt2")
     cur = con.cursor(cursor_factory=psycopg2.extras.DictCursor)
     cur.execute("SELECT * FROM users WHERE user_id = %s", (user_id,))
     rows = cur.fetchone()
