@@ -152,7 +152,7 @@ def register():
         # Insert info in our table users
         try:
             con = psycopg2.connect("postgres://qqsgjbkfwqpwny:59ceaff4ecac084fe6cb6dbbe8c544a626000f94e9b79778279abac06ba31e0e@ec2-52-5-167-89.compute-1.amazonaws.com:5432/d1uejtb7i1agt2")
-            cur = con.cursor(cursor_factory=psycopg2.extras.DictCursor)
+            cur = con.cursor()
             query = "INSERT INTO users (username, hash) VALUES (%s, %s)"
             cur.execute(query, (username, hash))
             con.commit()
