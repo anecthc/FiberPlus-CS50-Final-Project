@@ -170,42 +170,33 @@ def login():
     # Forget any user_id
     session.clear()
 
-    # User reached route via POST (as by submitting a form via POST)
     if request.method == "POST":
         username = request.form.get("username")
         password = request.form.get("password")
 
-        # Ensure username was submitted
-        if not username:
-            return apology("Must provide username", 403)
-
-        # Ensure password was submitted
-        elif not password:
-            return apology("Must provide password", 403)
+        # Ensure username and password were submitted
+        if not username or not password:
+            return apology("Must provide username and password", 403)
 
         # Query database for username
-
         con = psycopg2.connect("postgres://qqsgjbkfwqpwny:59ceaff4ecac084fe6cb6dbbe8c544a626000f94e9b79778279abac06ba31e0e@ec2-52-5-167-89.compute-1.amazonaws.com:5432/d1uejtb7i1agt2")
         cur = con.cursor(cursor_factory=psycopg2.extras.DictCursor)
         cur.execute("SELECT * FROM users WHERE username = %s", (username,))
-        # Error handle if user doesn't exist
-        try:
-            rows = cur.fetchone()
-        except:
-            return apology("This Username doesn't exist")
-
-        hash1 = rows["hash"]
-
-        # Ensure username exists and password is correct
-        if len([rows]) != 1 or not check_password_hash(hash1, password):
-            return apology("invalid username and/or password", 403)
-
-        # Remember which user has logged in
-        session["user_id"] = rows['user_id']
-
-        # Redirect user to home page
+        user = cur.fetchone()
         con.close()
 
+        if user is None:
+            return apology("Username not found", 403)
+
+        # Verify the password
+        hash1 = user["hash"]
+        if not check_password_hash(hash1, password):
+            return apology("Invalid password", 403)
+
+        # Remember which user has logged in
+        session["user_id"] = user['user_id']
+
+        # Redirect user to home page
         return redirect("/")
 
     # User reached route via GET (as by clicking a link or via redirect)
