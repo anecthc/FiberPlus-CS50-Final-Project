@@ -158,7 +158,7 @@ def register():
             con.commit()
             con.close()
             return redirect("/")
-        except psycopg2.IntegrityError:
+        except psycopg2.Error:
             return apology("This Username already exists")
     else:
         return render_template("register.html")
