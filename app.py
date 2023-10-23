@@ -237,7 +237,7 @@ def add():
 
     # Connect to Users database
     con = psycopg2.connect("postgres://qqsgjbkfwqpwny:59ceaff4ecac084fe6cb6dbbe8c544a626000f94e9b79778279abac06ba31e0e@ec2-52-5-167-89.compute-1.amazonaws.com:5432/d1uejtb7i1agt2")
-    cur = con.cursor(cursor_factory=psycopg2.extras.DictCursor)
+    cur = con.cursor()
     # Insert into bookmarks in Users.db the data we got from the form for each recipe the user wants to bookmark
     cur.execute("INSERT INTO bookmarks (user_id, link, label, image, source, url, calories, meal_type, total_time, dish_type, diet_labels, health_labels, cuisine_type, ingredients) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)",
             (session["user_id"], link, label, image, source, url, calories, mealType, totalTime, dishType, dietLabels, healthLabels, cuisineType, ingredients))
