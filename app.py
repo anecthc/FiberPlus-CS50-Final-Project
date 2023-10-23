@@ -120,7 +120,7 @@ def results():
         })
         count = count + 1
 
-    con = psycopg2.connect("postgres://nwobalvgtjvblb:6500a8e0f7c23222d2c5c783298a857170f1531b07c6e71536eb7aeeba726ee0@ec2-54-211-177-159.compute-1.amazonaws.com:5432/d1v5gbplsiu69j")
+    con = psycopg2.connect("postgres://qqsgjbkfwqpwny:59ceaff4ecac084fe6cb6dbbe8c544a626000f94e9b79778279abac06ba31e0e@ec2-52-5-167-89.compute-1.amazonaws.com:5432/d1uejtb7i1agt2")
     cur = con.cursor(cursor_factory=psycopg2.extras.DictCursor)
     cur.execute("SELECT link FROM bookmarks WHERE user_id = %s", [session["user_id"]])
     saved_recipes = cur.fetchall()
@@ -151,7 +151,7 @@ def register():
 
         # Insert info in our table users
         try:
-            con = psycopg2.connect("postgres://nwobalvgtjvblb:6500a8e0f7c23222d2c5c783298a857170f1531b07c6e71536eb7aeeba726ee0@ec2-54-211-177-159.compute-1.amazonaws.com:5432/d1v5gbplsiu69j")
+            con = psycopg2.connect("postgres://qqsgjbkfwqpwny:59ceaff4ecac084fe6cb6dbbe8c544a626000f94e9b79778279abac06ba31e0e@ec2-52-5-167-89.compute-1.amazonaws.com:5432/d1uejtb7i1agt2")
             cur = con.cursor(cursor_factory=psycopg2.extras.DictCursor)
             query = "INSERT INTO users (username, hash) VALUES (%s, %s)"
             cur.execute(query, (username, hash))
@@ -185,7 +185,7 @@ def login():
 
         # Query database for username
 
-        con = psycopg2.connect("postgres://nwobalvgtjvblb:6500a8e0f7c23222d2c5c783298a857170f1531b07c6e71536eb7aeeba726ee0@ec2-54-211-177-159.compute-1.amazonaws.com:5432/d1v5gbplsiu69j")
+        con = psycopg2.connect("postgres://qqsgjbkfwqpwny:59ceaff4ecac084fe6cb6dbbe8c544a626000f94e9b79778279abac06ba31e0e@ec2-52-5-167-89.compute-1.amazonaws.com:5432/d1uejtb7i1agt2")
         cur = con.cursor(cursor_factory=psycopg2.extras.DictCursor)
         cur.execute("SELECT * FROM users WHERE username = %s", (username,))
         # Error handle if user doesn't exist
@@ -245,7 +245,7 @@ def add():
     ingredients = request.form.get("ingredients").strip("[]")
 
     # Connect to Users database
-    con = psycopg2.connect("postgres://nwobalvgtjvblb:6500a8e0f7c23222d2c5c783298a857170f1531b07c6e71536eb7aeeba726ee0@ec2-54-211-177-159.compute-1.amazonaws.com:5432/d1v5gbplsiu69j")
+    con = psycopg2.connect("postgres://qqsgjbkfwqpwny:59ceaff4ecac084fe6cb6dbbe8c544a626000f94e9b79778279abac06ba31e0e@ec2-52-5-167-89.compute-1.amazonaws.com:5432/d1uejtb7i1agt2")
     cur = con.cursor()
     # Insert into bookmarks in Users.db the data we got from the form for each recipe the user wants to bookmark
     cur.execute("INSERT INTO bookmarks (user_id, link, label, image, source, url, calories, meal_type, total_time, dish_type, diet_labels, health_labels, cuisine_type, ingredients) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)",
@@ -261,7 +261,7 @@ def add():
 @login_required
 def bookmark():
     
-    con = psycopg2.connect("postgres://nwobalvgtjvblb:6500a8e0f7c23222d2c5c783298a857170f1531b07c6e71536eb7aeeba726ee0@ec2-54-211-177-159.compute-1.amazonaws.com:5432/d1v5gbplsiu69j")
+    con = psycopg2.connect("postgres://qqsgjbkfwqpwny:59ceaff4ecac084fe6cb6dbbe8c544a626000f94e9b79778279abac06ba31e0e@ec2-52-5-167-89.compute-1.amazonaws.com:5432/d1uejtb7i1agt2")
     cur = con.cursor(cursor_factory=psycopg2.extras.DictCursor)
     cur.execute(
     "SELECT link FROM bookmarks WHERE user_id = %s",
@@ -276,7 +276,7 @@ def bookmark():
 def remove():
     link = request.form.get("link")
 
-    con = psycopg2.connect("postgres://nwobalvgtjvblb:6500a8e0f7c23222d2c5c783298a857170f1531b07c6e71536eb7aeeba726ee0@ec2-54-211-177-159.compute-1.amazonaws.com:5432/d1v5gbplsiu69j")
+    con = psycopg2.connect("postgres://qqsgjbkfwqpwny:59ceaff4ecac084fe6cb6dbbe8c544a626000f94e9b79778279abac06ba31e0e@ec2-52-5-167-89.compute-1.amazonaws.com:5432/d1uejtb7i1agt2")
     cur = con.cursor(cursor_factory=psycopg2.extras.DictCursor)
     cur.execute("DELETE FROM bookmarks WHERE link = %s", (link,))
     con.commit()
@@ -291,7 +291,7 @@ def profile():
     if request.method == "POST":
 
         # Query the database for the user id
-        con = psycopg2.connect("postgres://nwobalvgtjvblb:6500a8e0f7c23222d2c5c783298a857170f1531b07c6e71536eb7aeeba726ee0@ec2-54-211-177-159.compute-1.amazonaws.com:5432/d1v5gbplsiu69j")
+        con = psycopg2.connect("postgres://qqsgjbkfwqpwny:59ceaff4ecac084fe6cb6dbbe8c544a626000f94e9b79778279abac06ba31e0e@ec2-52-5-167-89.compute-1.amazonaws.com:5432/d1uejtb7i1agt2")
         cur = con.cursor(cursor_factory=psycopg2.extras.DictCursor)
         cur.execute("SELECT hash FROM users WHERE user_id = %s", (session["user_id"],))
         hashOld = cur.fetchone()[0]
@@ -320,7 +320,7 @@ def profile():
 
         # Hash the new password and update the user's password in the database
         hashNew = generate_password_hash(new_password)
-        con = psycopg2.connect("postgres://nwobalvgtjvblb:6500a8e0f7c23222d2c5c783298a857170f1531b07c6e71536eb7aeeba726ee0@ec2-54-211-177-159.compute-1.amazonaws.com:5432/d1v5gbplsiu69j")
+        con = psycopg2.connect("postgres://qqsgjbkfwqpwny:59ceaff4ecac084fe6cb6dbbe8c544a626000f94e9b79778279abac06ba31e0e@ec2-52-5-167-89.compute-1.amazonaws.com:5432/d1uejtb7i1agt2")
         cur = con.cursor(cursor_factory=psycopg2.extras.DictCursor)
         cur.execute("UPDATE users SET hash = %s WHERE user_id = %s", (hashNew, session["user_id"]))
         con.commit()
